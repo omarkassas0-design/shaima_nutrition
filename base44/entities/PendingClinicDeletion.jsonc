@@ -1,0 +1,81 @@
+{
+  "name": "PendingClinicDeletion",
+  "type": "object",
+  "description": "Tracks pending clinic soft-deletion requests with a mandatory 60-second countdown. Created exclusively by scheduleClinicDeletion (super_admin only) via the service role. A workflow waits 60 seconds then calls executeClinicDeletion, which verifies the record is still 'pending' (not cancelled) before soft-deleting the clinic. The Super Admin can cancel at any time before execution via cancelClinicDeletion. After soft-deletion, the clinic can be restored via restoreClinic, which updates the status to 'restored'. This record persists after execution/cancellation/restoration for audit trail purposes.",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "The clinic scheduled for soft-deletion"
+    },
+    "clinic_name": {
+      "type": "string",
+      "description": "Cached clinic name for display and audit"
+    },
+    "requested_by_id": {
+      "type": "string",
+      "description": "Super admin who requested the deletion"
+    },
+    "requested_by_name": {
+      "type": "string",
+      "description": "Super admin display name for audit"
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the deletion was requested"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the 60-second countdown expires and the clinic will be soft-deleted"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "cancelled",
+        "executed",
+        "restored"
+      ],
+      "default": "pending",
+      "description": "Current state of the deletion request \u2014 'pending' (countdown), 'cancelled' (aborted), 'executed' (soft-deleted), 'restored' (restored after soft-deletion)"
+    },
+    "executed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the clinic was soft-deleted by the workflow"
+    },
+    "cancelled_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the deletion was cancelled by the Super Admin"
+    },
+    "restored_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the clinic was restored after soft-deletion"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "requested_by_id",
+    "expires_at",
+    "status"
+  ],
+  "rls": {
+    "create": {
+      "id": "__service_role_only__"
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "id": "__service_role_only__"
+    },
+    "delete": {
+      "id": "__service_role_only__"
+    }
+  }
+}

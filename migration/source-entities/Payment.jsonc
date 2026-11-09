@@ -1,0 +1,112 @@
+{
+  "name": "Payment",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "patient_id": {
+      "type": "string",
+      "description": "Patient ID"
+    },
+    "patient_treatment_id": {
+      "type": "string",
+      "description": "Related patient treatment ID"
+    },
+    "doctor_id": {
+      "type": "string",
+      "description": "Doctor ID \u2014 required so commission can be calculated from the doctor's profile"
+    },
+    "doctor_name": {
+      "type": "string",
+      "description": "Cached doctor name for display"
+    },
+    "doctor_commission_percentage": {
+      "type": "number",
+      "default": 0,
+      "description": "Doctor commission percentage (%) captured at payment time \u2014 stored for historical accuracy"
+    },
+    "doctor_commission_amount": {
+      "type": "number",
+      "default": 0,
+      "description": "Calculated commission amount. For normal treatments: payment amount \u00d7 doctor_commission_percentage / 100. For prosthesis/lab treatments: NET amount \u00d7 doctor_commission_percentage / 100 (net = payment \u2212 lab cost, cost-recovery-first across partial payments)."
+    },
+    "is_prosthesis": {
+      "type": "boolean",
+      "default": false,
+      "description": "True when this payment is for a prosthesis/lab treatment linked to a LabCase with a cost. Commission for prosthesis payments is calculated on the NET amount (payment \u2212 lab cost), not the full payment amount."
+    },
+    "prosthesis_cost": {
+      "type": "number",
+      "default": 0,
+      "description": "The LabCase cost at the time of this payment \u2014 stored for transparency and audit. Zero for non-prosthesis payments."
+    },
+    "net_amount": {
+      "type": "number",
+      "default": 0,
+      "description": "The net amount commission was calculated on. For prosthesis payments: the portion of this payment above the lab cost (cost-recovery-first across partial payments). For normal payments: equals the full payment amount."
+    },
+    "amount": {
+      "type": "number",
+      "description": "Payment amount"
+    },
+    "currency": {
+      "type": "string",
+      "enum": [
+        "USD",
+        "SYP",
+        "TRY",
+        "EUR"
+      ],
+      "default": "USD"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "cash",
+        "card",
+        "transfer",
+        "other"
+      ],
+      "default": "cash"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Payment notes"
+    },
+    "payment_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Payment date"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "patient_id",
+    "doctor_id",
+    "amount"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

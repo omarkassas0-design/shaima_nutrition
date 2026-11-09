@@ -1,0 +1,91 @@
+{
+  "name": "Doctor",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Doctor name"
+    },
+    "specialty": {
+      "type": "string",
+      "description": "Medical specialty"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number"
+    },
+    "calendar_color": {
+      "type": "string",
+      "description": "Color for calendar display"
+    },
+    "schedule": {
+      "type": "object",
+      "description": "Working schedule config"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Linked user account ID"
+    },
+    "commission_percentage": {
+      "type": "number",
+      "default": 0,
+      "description": "Legacy single commission percentage (0-100). Superseded by commission_percentage_doctor / commission_percentage_clinic. Kept for backward compatibility \u2014 used as fallback when the source-specific rate is not set."
+    },
+    "commission_percentage_doctor": {
+      "type": "number",
+      "default": 0,
+      "description": "Commission percentage applied when the DOCTOR brought the patient (0-100) \u2014 managed exclusively by clinic_admin via saveDoctorCompensation."
+    },
+    "commission_percentage_clinic": {
+      "type": "number",
+      "default": 0,
+      "description": "Commission percentage applied when the CLINIC brought the patient (0-100) \u2014 managed exclusively by clinic_admin via saveDoctorCompensation."
+    },
+    "monthly_salary": {
+      "type": "number",
+      "default": 0,
+      "description": "Fixed monthly salary \u2014 managed exclusively by clinic_admin via saveDoctorCompensation. Doctors can never edit this."
+    },
+    "salary_currency": {
+      "type": "string",
+      "enum": [
+        "USD",
+        "SYP",
+        "TRY",
+        "EUR"
+      ],
+      "default": "USD",
+      "description": "Monthly salary currency"
+    }
+  },
+  "required": [
+    "name",
+    "clinic_id"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

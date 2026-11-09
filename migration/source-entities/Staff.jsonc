@@ -1,0 +1,118 @@
+{
+  "name": "Staff",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Linked user account ID \u2014 set when a receptionist is linked via an existing ClinicRoleAssignment (linkExistingReceptionist). Null for manually-created staff records."
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Full name"
+    },
+    "employee_id": {
+      "type": "string",
+      "description": "Employee ID"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email address"
+    },
+    "address": {
+      "type": "string",
+      "description": "Address"
+    },
+    "national_id": {
+      "type": "string",
+      "description": "National ID"
+    },
+    "position": {
+      "type": "string",
+      "enum": [
+        "nurse",
+        "receptionist",
+        "accountant",
+        "cleaner",
+        "assistant",
+        "technician",
+        "call_center",
+        "other"
+      ],
+      "description": "Position"
+    },
+    "department": {
+      "type": "string",
+      "description": "Department"
+    },
+    "hire_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Hire date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "on_leave",
+        "suspended",
+        "resigned"
+      ],
+      "default": "active",
+      "description": "Employment status"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "salary": {
+      "type": "number",
+      "description": "Salary amount (admin-only)"
+    },
+    "salary_currency": {
+      "type": "string",
+      "enum": [
+        "USD",
+        "SYP",
+        "TRY",
+        "EUR"
+      ],
+      "default": "USD",
+      "description": "Salary currency"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "full_name",
+    "position"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

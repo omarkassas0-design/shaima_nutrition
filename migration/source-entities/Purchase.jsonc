@@ -1,0 +1,82 @@
+{
+  "name": "Purchase",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Purchase item / description"
+    },
+    "category": {
+      "type": "string",
+      "description": "Purchase category (supplies, equipment, instruments, medication, office, other)"
+    },
+    "supplier": {
+      "type": "string",
+      "description": "Supplier / vendor name"
+    },
+    "quantity": {
+      "type": "number",
+      "default": 1,
+      "description": "Quantity purchased"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit of measure (box, piece, pack, etc.)"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Total purchase amount"
+    },
+    "currency": {
+      "type": "string",
+      "enum": [
+        "USD",
+        "SYP",
+        "TRY",
+        "EUR"
+      ],
+      "default": "USD"
+    },
+    "purchase_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Purchase date"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "name",
+    "amount",
+    "purchase_date"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

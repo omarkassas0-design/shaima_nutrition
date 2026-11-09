@@ -1,0 +1,50 @@
+{
+  "name": "Clinic Deletion Countdown",
+  "description": "Waits 60 seconds after a clinic deletion is scheduled, then executes the permanent deletion server-side. The execute function verifies the deletion is still pending (not cancelled) before destroying any data.",
+  "trigger": {
+    "config": {
+      "trigger_type": "entity",
+      "entity_name": "PendingClinicDeletion",
+      "events": [
+        "create"
+      ]
+    },
+    "condition": "${ .trigger.data.status == \"pending\" }"
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "clinic_deletion_countdown",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "wait_countdown": {
+          "wait": "PT60S",
+          "then": "execute_deletion",
+          "x-base44": {
+            "title": "60-second countdown",
+            "description": "Mandatory wait before permanent deletion"
+          }
+        }
+      },
+      {
+        "execute_deletion": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "executeClinicDeletion",
+            "args": {
+              "pending_deletion_id": "${ .trigger.entity_id }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Execute deletion",
+            "description": "Permanently deletes clinic data if still pending"
+          }
+        }
+      }
+    ]
+  }
+}

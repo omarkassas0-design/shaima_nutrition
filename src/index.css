@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 18% 38%;
+    --accent: 172 66% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 199 89% 48%;
+    --chart-1: 199 89% 48%;
+    --chart-2: 172 66% 50%;
+    --chart-3: 262 83% 58%;
+    --chart-4: 43 96% 56%;
+    --chart-5: 339 90% 51%;
+    --radius: 0.75rem;
+    --font-heading: 'Inter', 'Noto Sans Arabic', sans-serif;
+    --font-body: 'Inter', 'Noto Sans Arabic', sans-serif;
+    --font-display: 'Inter', 'Noto Sans Arabic', sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222 47% 18%;
+    --sidebar-primary: 199 89% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 199 90% 96%;
+    --sidebar-accent-foreground: 199 89% 35%;
+    --sidebar-border: 214 32% 93%;
+    --sidebar-ring: 199 89% 48%;
+  }
+
+  .dark {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 222 47% 14%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 222 47% 14%;
+    --muted-foreground: 215 16% 68%;
+    --accent: 172 66% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 222 47% 18%;
+    --input: 222 47% 18%;
+    --ring: 199 89% 48%;
+    --chart-1: 199 89% 58%;
+    --chart-2: 172 66% 60%;
+    --chart-3: 262 83% 68%;
+    --chart-4: 43 96% 66%;
+    --chart-5: 339 90% 61%;
+    --sidebar-background: 222 47% 8%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 199 89% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 222 47% 14%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 222 47% 14%;
+    --sidebar-ring: 199 89% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-body;
+  }
+  [dir="rtl"] {
+    font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+  }
+  /* Arabic is a cursive script: any letter-spacing visually breaks the joins
+     between letters and makes the text look disconnected. Neutralise tracking
+     for right-to-left content whatever utility class is applied. */
+  [dir="rtl"] * {
+    letter-spacing: normal !important;
+  }
+  /* Numbers, amounts, time ranges ("14:30 – 15:00"), negatives ("-₺450,25")
+     and percentages are neutral to the bidi algorithm: inside an RTL page their
+     signs, separators and range order get reshuffled around the digits.
+     Every text-only element (no child elements; table headers are left out as
+     the browser centres them by default) therefore resolves its OWN
+     direction from its content: a pure-number value is laid out left-to-right
+     as one unit, while any text that contains Arabic stays right-to-left.
+     text-align: match-parent keeps each element aligned exactly as its parent
+     (right-aligned in an RTL page, centred where the parent centres) instead
+     of letting the resolved LTR direction flip it to the left edge.
+     :where() keeps specificity at zero so the .num / .bidi-iso / .bidi-ltr
+     and text-* utilities still win where a screen asks for something specific. */
+  [dir="rtl"] :where(span, p, td, li, label, strong, b, small, a, div, h1, h2, h3, h4, h5, h6):not(:has(*)) {
+    unicode-bidi: plaintext;
+    text-align: match-parent;
+    text-align: -webkit-match-parent; /* Chromium/WebKit only honour the prefixed keyword */
+  }
+}
+
+@layer utilities {
+  .shadow-soft {
+    box-shadow: 0 5px 24px -10px hsl(var(--primary) / 0.14), 0 1px 3px hsl(var(--foreground) / 0.025);
+  }
+  .glass {
+    @apply bg-card/95 backdrop-blur-xl border border-border/50 shadow-soft;
+  }
+  .aura-app { background: radial-gradient(ellipse at top, hsl(var(--primary) / .045), transparent 65%), hsl(var(--background)); }
+  .aura-app main { min-width: 0; }
+  .aura-app .truncate { white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; }
+  .aura-app h1, .aura-app h2, .aura-app h3 { overflow-wrap: anywhere; }
+  .aura-app [data-calendar-event] .truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .aura-app [data-calendar-event] { text-align: start; }
+  input[type="date"], input[type="datetime-local"], input[type="month"] { direction: ltr; unicode-bidi: isolate; min-width: 0; }
+  .aura-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.625rem; }
+  @media (min-width: 640px) { .aura-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; } }
+  @media (min-width: 1100px) { .aura-metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  @media (min-width: 1500px) { .aura-metrics { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+  .dark .glass {
+    @apply bg-slate-900/60 backdrop-blur-xl border border-slate-700/40 shadow-lg;
+  }
+  .glass-dark {
+    @apply bg-slate-900/70 backdrop-blur-xl border border-slate-700/30 shadow-lg;
+  }
+  .aura-metric { --metric-color: var(--primary); background: linear-gradient(125deg, hsl(var(--metric-color) / .075), hsl(var(--card)) 70%); }
+  .metric-icon { color: hsl(var(--primary-foreground)); background: linear-gradient(145deg, hsl(var(--metric-color)), hsl(var(--metric-color) / .65)); box-shadow: 0 5px 14px hsl(var(--metric-color) / .18); }
+  .metric-sky { --metric-color: var(--chart-1); }
+  .metric-teal { --metric-color: var(--chart-2); }
+  .metric-violet, .metric-indigo { --metric-color: var(--chart-3); }
+  .metric-amber { --metric-color: var(--chart-4); }
+  .metric-rose { --metric-color: var(--chart-5); }
+  .gradient-primary {
+    @apply bg-gradient-to-br from-sky-500 to-cyan-400;
+  }
+  .gradient-accent {
+    @apply bg-gradient-to-br from-teal-400 to-emerald-500;
+  }
+  .text-gradient {
+    @apply bg-gradient-to-r from-sky-500 to-teal-400 bg-clip-text text-transparent;
+  }
+  /* ── Numerals & mixed-direction content (Arabic RTL safety) ──
+     unicode-bidi: plaintext isolates a numeric run so digits, IDs, phone
+     numbers and tooth numbers keep their real order inside RTL Arabic text
+     instead of being reversed or re-ordered around neighbouring words. */
+  .num,
+  .bidi-num {
+    unicode-bidi: plaintext;
+  }
+  /* Whole-value isolation: keeps an amount, date, phone number or identifier
+     together as a single left-to-right unit inside right-to-left text, so the
+     symbols and digits can never detach from each other or swap sides. */
+  .bidi-iso {
+    unicode-bidi: isolate;
+  }
+  .bidi-ltr {
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+  [dir="rtl"] .tabular-nums,
+  [dir="rtl"] .num,
+  [dir="rtl"] .bidi-num {
+    unicode-bidi: plaintext;
+  }
+  [dir="rtl"] input[type="number"],
+  [dir="rtl"] input[type="tel"] {
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+  [dir="rtl"] .bidi-ltr {
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "name": "Notification",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Target user ID"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "lab_ready",
+        "appointment_reminder",
+        "payment_received",
+        "xray_uploaded",
+        "schedule_changed"
+      ],
+      "description": "Notification type"
+    },
+    "title": {
+      "type": "string",
+      "description": "Notification title"
+    },
+    "message": {
+      "type": "string",
+      "description": "Notification message"
+    },
+    "link": {
+      "type": "string",
+      "description": "Deep link URL"
+    },
+    "read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Read status"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "type",
+    "title",
+    "message"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.user_id": "{{user.id}}"
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.user_id": "{{user.id}}"
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.user_id": "{{user.id}}"
+        }
+      ]
+    }
+  }
+}

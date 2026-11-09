@@ -1,0 +1,170 @@
+{
+  "type": "object",
+  "name": "User",
+  "title": "User",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "user"
+      ],
+      "default": "user",
+      "description": "Platform role \u2014 admin (super admin) or user (default). Clinic-level roles (clinic_admin, doctor, receptionist) are NEVER stored here \u2014 they live in ClinicRoleAssignment. This field is always reset to 'user' by assignUserToClinic to prevent corruption."
+    },
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID \u2014 display mirror synced by assignUserToClinic. The authoritative clinic pointer is the user's active ClinicRoleAssignment."
+    },
+    "clinic_role": {
+      "type": "string",
+      "enum": [
+        "clinic_admin",
+        "doctor",
+        "receptionist"
+      ],
+      "description": "Clinic role \u2014 display mirror synced from the authoritative ClinicRoleAssignment by assignUserToClinic. This is NOT used for authorization \u2014 resolveRole reads ClinicRoleAssignment as the single source of truth. Super Admin is owner-only and never appears here."
+    },
+    "preferred_language": {
+      "type": "string",
+      "enum": [
+        "en",
+        "ar",
+        "tr"
+      ],
+      "default": "en"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number collected at sign-up"
+    },
+    "clinic_name": {
+      "type": "string",
+      "description": "Requested clinic name collected at sign-up"
+    },
+    "signup_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Registration approval status \u2014 pending until Super Admin approves"
+    },
+    "data": {
+      "type": "object",
+      "description": "Free-form data mirror for RLS \u2014 stores clinic_id and role for row-level security checks. Synced by assignUserToClinic as a display mirror; the authoritative source is ClinicRoleAssignment."
+    }
+  },
+  "required": [],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "data.role": "super_admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "$and": [
+            {
+              "user_condition": {
+                "data.role": "clinic_admin"
+              }
+            },
+            {
+              "data.clinic_id": "{{user.data.clinic_id}}"
+            }
+          ]
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "data.role": "super_admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "$and": [
+            {
+              "user_condition": {
+                "data.role": "clinic_admin"
+              }
+            },
+            {
+              "data.clinic_id": "{{user.data.clinic_id}}"
+            }
+          ]
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "user_condition": {
+            "data.role": "super_admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "$and": [
+            {
+              "user_condition": {
+                "data.role": "clinic_admin"
+              }
+            },
+            {
+              "data.clinic_id": "{{user.data.clinic_id}}"
+            }
+          ]
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "data.role": "super_admin"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "$and": [
+            {
+              "user_condition": {
+                "data.role": "clinic_admin"
+              }
+            },
+            {
+              "data.clinic_id": "{{user.data.clinic_id}}"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

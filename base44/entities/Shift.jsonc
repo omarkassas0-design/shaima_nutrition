@@ -1,0 +1,93 @@
+{
+  "name": "Shift",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "employee_id": {
+      "type": "string",
+      "description": "Staff ID"
+    },
+    "employee_name": {
+      "type": "string",
+      "description": "Cached employee name"
+    },
+    "employee_position": {
+      "type": "string",
+      "description": "Cached employee position"
+    },
+    "shift_type": {
+      "type": "string",
+      "enum": [
+        "morning",
+        "evening",
+        "split",
+        "custom"
+      ],
+      "default": "morning",
+      "description": "Shift type"
+    },
+    "days_of_week": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Days of week (sun, mon, tue, wed, thu, fri, sat)"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Start time HH:MM"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "End time HH:MM"
+    },
+    "break_duration_minutes": {
+      "type": "number",
+      "default": 60,
+      "description": "Break duration in minutes"
+    },
+    "weekly_off_days": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Weekly off days"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "employee_id",
+    "days_of_week",
+    "start_time",
+    "end_time"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

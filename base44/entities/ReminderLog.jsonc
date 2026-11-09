@@ -1,0 +1,93 @@
+{
+  "name": "ReminderLog",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "patient_id": {
+      "type": "string",
+      "description": "Patient ID"
+    },
+    "patient_name": {
+      "type": "string",
+      "description": "Cached patient name"
+    },
+    "patient_phone": {
+      "type": "string",
+      "description": "Patient WhatsApp number"
+    },
+    "appointment_id": {
+      "type": "string",
+      "description": "Appointment ID"
+    },
+    "message": {
+      "type": "string",
+      "description": "Message sent"
+    },
+    "reminder_type": {
+      "type": "string",
+      "enum": [
+        "24h",
+        "12h",
+        "2h"
+      ],
+      "description": "Reminder type"
+    },
+    "scheduled_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When reminder was scheduled"
+    },
+    "sent_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When reminder was sent"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "sent",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "Delivery status"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error message if failed"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "patient_id",
+    "patient_phone",
+    "appointment_id",
+    "reminder_type",
+    "scheduled_time"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

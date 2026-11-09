@@ -1,0 +1,80 @@
+{
+  "name": "PatientFile",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "patient_id": {
+      "type": "string",
+      "description": "Patient ID"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "Public file URL (legacy records only \u2014 new uploads use file_uri)"
+    },
+    "file_uri": {
+      "type": "string",
+      "description": "Private file URI for secure signed-URL access"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Original file name"
+    },
+    "file_type": {
+      "type": "string",
+      "enum": [
+        "image",
+        "pdf",
+        "xray",
+        "document"
+      ],
+      "description": "File category"
+    },
+    "before_after_tag": {
+      "type": "string",
+      "enum": [
+        "before",
+        "after"
+      ],
+      "description": "Before/After gallery tag \u2014 omitted for regular files. When set, the file appears in the Before/After Gallery comparison view."
+    },
+    "associated_treatment_id": {
+      "type": "string",
+      "description": "Optional link to a PatientTreatment record \u2014 used by the Before/After Gallery to group images by treatment"
+    },
+    "notes": {
+      "type": "string",
+      "description": "File notes"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "patient_id",
+    "file_url",
+    "file_name"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

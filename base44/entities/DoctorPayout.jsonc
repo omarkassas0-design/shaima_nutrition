@@ -1,0 +1,81 @@
+{
+  "name": "DoctorPayout",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "doctor_id": {
+      "type": "string",
+      "description": "Doctor ID"
+    },
+    "doctor_name": {
+      "type": "string",
+      "description": "Cached doctor name"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Payment amount"
+    },
+    "currency": {
+      "type": "string",
+      "enum": [
+        "USD",
+        "SYP",
+        "TRY",
+        "EUR"
+      ],
+      "default": "USD",
+      "description": "Payout currency \u2014 must match the currency of the commission being paid out"
+    },
+    "payment_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Payment date"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Payment notes"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date",
+      "description": "Commission period start"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date",
+      "description": "Commission period end"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "doctor_id",
+    "amount",
+    "currency",
+    "payment_date"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

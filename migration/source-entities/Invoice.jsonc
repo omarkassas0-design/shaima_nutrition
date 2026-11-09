@@ -1,0 +1,182 @@
+{
+  "name": "Invoice",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "patient_id": {
+      "type": "string",
+      "description": "Patient ID"
+    },
+    "patient_name": {
+      "type": "string",
+      "description": "Cached patient name"
+    },
+    "invoice_number": {
+      "type": "string",
+      "description": "Unique invoice/receipt number"
+    },
+    "invoice_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Document date"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "invoice",
+        "receipt"
+      ],
+      "description": "Document type \u2014 invoice (bill with remaining balance) or receipt (proof of payment)"
+    },
+    "doctor_id": {
+      "type": "string",
+      "description": "Doctor ID"
+    },
+    "doctor_name": {
+      "type": "string",
+      "description": "Cached doctor name"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "treatment_id": {
+            "type": "string"
+          },
+          "treatment_name": {
+            "type": "string"
+          },
+          "tooth_numbers": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Tooth numbers associated with this treatment group \u2014 treatments on different teeth are never grouped"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "unit_price": {
+            "type": "number"
+          },
+          "total_price": {
+            "type": "number",
+            "description": "unit_price \u00d7 quantity"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "paid_amount": {
+            "type": "number"
+          },
+          "discount_type": {
+            "type": "string"
+          },
+          "discount_value": {
+            "type": "number"
+          },
+          "treatment_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "IDs of the PatientTreatment records included in this group"
+          }
+        }
+      },
+      "description": "Snapshot of completed treatments at creation time \u2014 only completed/performed treatments are included, grouped by treatment name + tooth + currency + unit price"
+    },
+    "payment_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Payment IDs included in this document"
+    },
+    "payments_snapshot": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "payment_id": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string"
+          },
+          "payment_date": {
+            "type": "string"
+          },
+          "treatment_name": {
+            "type": "string",
+            "description": "Related treatment name (looked up from patient_treatment_id)"
+          },
+          "tooth_number": {
+            "type": "number",
+            "description": "Tooth number from the related treatment, if available"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Snapshot of payments at creation time with enriched treatment info"
+    },
+    "totals": {
+      "type": "object",
+      "description": "Per-currency totals: { USD: { due, paid, remaining }, TRY: { ... } } \u2014 currencies are never mixed"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "void"
+      ],
+      "default": "active",
+      "description": "Document status"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "patient_id",
+    "invoice_number",
+    "invoice_date",
+    "type"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

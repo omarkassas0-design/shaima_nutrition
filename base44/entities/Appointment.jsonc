@@ -1,0 +1,112 @@
+{
+  "name": "Appointment",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "treatment_room": {
+      "type": "number",
+      "enum": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "default": 1,
+      "description": "Treatment room number (1-5) within the clinic"
+    },
+    "patient_id": {
+      "type": "string",
+      "description": "Patient ID"
+    },
+    "doctor_id": {
+      "type": "string",
+      "description": "Doctor ID"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Appointment date"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Start time HH:MM"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "End time HH:MM"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "confirmed",
+        "waiting",
+        "completed",
+        "no_show",
+        "cancelled"
+      ],
+      "default": "scheduled"
+    },
+    "treatment_id": {
+      "type": "string",
+      "description": "Related treatment ID"
+    },
+    "treatment_name": {
+      "type": "string",
+      "description": "Treatment name for display"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Appointment notes"
+    },
+    "reminder_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "patient_name": {
+      "type": "string",
+      "description": "Cached patient name for display"
+    },
+    "doctor_name": {
+      "type": "string",
+      "description": "Cached doctor name for display"
+    },
+    "doctor_color": {
+      "type": "string",
+      "description": "Cached doctor color for display"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "patient_id",
+    "doctor_id",
+    "date",
+    "start_time"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

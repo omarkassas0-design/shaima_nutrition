@@ -1,0 +1,94 @@
+{
+  "name": "ConsentForm",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "patient_id": {
+      "type": "string",
+      "description": "Patient ID"
+    },
+    "patient_name": {
+      "type": "string",
+      "description": "Cached patient name"
+    },
+    "template_key": {
+      "type": "string",
+      "description": "Consent template key (extraction, root_canal, surgery, etc.)"
+    },
+    "template_name": {
+      "type": "string",
+      "description": "Template display name at time of signing"
+    },
+    "procedure_name": {
+      "type": "string",
+      "description": "Specific procedure description (e.g. tooth number, area)"
+    },
+    "procedure_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Procedure date"
+    },
+    "doctor_id": {
+      "type": "string",
+      "description": "Doctor ID"
+    },
+    "doctor_name": {
+      "type": "string",
+      "description": "Cached doctor name"
+    },
+    "consent_body": {
+      "type": "string",
+      "description": "Full consent text with patient data filled in \u2014 stored as a snapshot at signing time"
+    },
+    "patient_signature": {
+      "type": "string",
+      "description": "Base64 PNG of patient's digital signature"
+    },
+    "signed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the consent was signed"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "signed",
+        "void"
+      ],
+      "default": "signed",
+      "description": "Consent status"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "patient_id",
+    "template_key",
+    "consent_body",
+    "status"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

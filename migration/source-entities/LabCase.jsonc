@@ -1,0 +1,186 @@
+{
+  "name": "LabCase",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "patient_id": {
+      "type": "string",
+      "description": "Patient ID"
+    },
+    "patient_name": {
+      "type": "string",
+      "description": "Cached patient name"
+    },
+    "patient_treatment_id": {
+      "type": "string",
+      "description": "Legacy single treatment link. Kept in sync with the FIRST entry of patient_treatment_ids so existing reports, payments and prosthesis commission logic keep working."
+    },
+    "patient_treatment_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "All PatientTreatment records (treatment units / teeth) covered by this lab case. A single case can cover multiple units (e.g. a zirconia bridge). Duplicate ids are never stored."
+    },
+    "doctor_id": {
+      "type": "string",
+      "description": "Doctor ID"
+    },
+    "doctor_name": {
+      "type": "string",
+      "description": "Cached doctor name"
+    },
+    "lab_id": {
+      "type": "string",
+      "description": "Laboratory ID"
+    },
+    "lab_name": {
+      "type": "string",
+      "description": "Cached laboratory name"
+    },
+    "case_type": {
+      "type": "string",
+      "description": "Type of lab case (crown, bridge, denture, etc.)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Case description"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Expected completion date"
+    },
+    "sent_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date sent to lab"
+    },
+    "received_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date received from lab"
+    },
+    "cost": {
+      "type": "number",
+      "description": "Lab case cost \u2014 the amount paid to the laboratory for the prosthesis. This is the expense amount finalized into Monthly Expenses. Never mixed with patient_price."
+    },
+    "patient_price": {
+      "type": "number",
+      "default": 0,
+      "description": "The price charged to the patient for the prosthesis (what the patient pays). Auto-filled from the linked treatments' prices and can be adjusted manually; never written back to the treatment catalog."
+    },
+    "patient_paid_amount": {
+      "type": "number",
+      "default": 0,
+      "description": "Amount the patient has paid for this prosthesis case"
+    },
+    "currency": {
+      "type": "string",
+      "enum": [
+        "USD",
+        "SYP",
+        "TRY",
+        "EUR"
+      ],
+      "default": "USD",
+      "description": "Currency for cost, patient_price, and patient_paid_amount \u2014 all amounts use the same currency"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "sent",
+        "in_progress",
+        "ready",
+        "delivered",
+        "cancelled"
+      ],
+      "default": "sent"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Attachment URLs"
+    },
+    "net_amount": {
+      "type": "number",
+      "default": 0,
+      "description": "Net amount = patient_paid_amount \u2212 cost. Calculated and stored when the case is finalized (status becomes Delivered)."
+    },
+    "doctor_commission_percentage": {
+      "type": "number",
+      "default": 0,
+      "description": "Doctor commission percentage (%) captured at finalization time \u2014 based on the patient's source and the doctor's commission profile. Stored for historical accuracy."
+    },
+    "doctor_commission_amount": {
+      "type": "number",
+      "default": 0,
+      "description": "Doctor commission amount = net_amount \u00d7 doctor_commission_percentage / 100. Only calculated on the NET amount (never on the lab cost)."
+    },
+    "clinic_share": {
+      "type": "number",
+      "default": 0,
+      "description": "Clinic share = net_amount \u2212 doctor_commission_amount. Calculated at finalization."
+    },
+    "is_finalized": {
+      "type": "boolean",
+      "default": false,
+      "description": "True once the case has been finalized (status reached Delivered and the cost was recorded as an expense). Prevents duplicate expense/commission calculations."
+    },
+    "finalized_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the case was finalized (null when not finalized)"
+    },
+    "finalized_by": {
+      "type": "string",
+      "description": "User ID of the user who finalized the case"
+    },
+    "finalized_by_name": {
+      "type": "string",
+      "description": "Display name of the user who finalized the case"
+    },
+    "expense_id": {
+      "type": "string",
+      "description": "ID of the Expense record created when the case was finalized (under 'Prosthesis/Lab Costs'). Used to reverse the expense if the case is un-delivered."
+    }
+  },
+  "required": [
+    "clinic_id",
+    "patient_id",
+    "lab_id",
+    "case_type"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "Send Scheduled Reports",
+  "description": "Daily at 8 AM, checks all enabled ScheduledReport configurations that are due, generates report summaries (respecting clinic isolation and currency separation), and emails them to configured recipients.",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "send_scheduled_reports",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "send_reports": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "sendScheduledReports",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Send due scheduled reports",
+            "description": "Generate and email report summaries"
+          }
+        }
+      }
+    ]
+  },
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 8 * * *",
+      "one_time_date": null,
+      "timezone": "Europe/Istanbul",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  }
+}

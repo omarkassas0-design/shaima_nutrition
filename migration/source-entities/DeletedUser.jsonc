@@ -1,0 +1,88 @@
+{
+  "name": "DeletedUser",
+  "type": "object",
+  "description": "Tracks soft-deleted users for the Super Admin Recycle Bin. Created exclusively by softDeleteUser (super_admin only) via the service role. The user's ClinicRoleAssignment status is set to 'pending' (suspended) to block access server-side. Restore via restoreUser sets the CRA status back to 'active' and marks this record as 'restored'. This record persists after restore for audit trail purposes.",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "The soft-deleted user's ID"
+    },
+    "email": {
+      "type": "string",
+      "description": "Cached user email for display"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Cached user full name for display"
+    },
+    "clinic_id": {
+      "type": "string",
+      "description": "The clinic the user belonged to (from their active CRA at deletion time)"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "clinic_admin",
+        "doctor",
+        "receptionist"
+      ],
+      "description": "The user's clinic role at deletion time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "restored"
+      ],
+      "default": "pending",
+      "description": "Current state \u2014 'pending' (soft-deleted, in Recycle Bin) or 'restored' (user was restored)"
+    },
+    "deleted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the user was soft-deleted"
+    },
+    "deleted_by": {
+      "type": "string",
+      "description": "Super admin ID who deleted the user"
+    },
+    "deleted_by_name": {
+      "type": "string",
+      "description": "Super admin display name for audit"
+    },
+    "restored_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the user was restored"
+    },
+    "restored_by": {
+      "type": "string",
+      "description": "Super admin ID who restored the user"
+    },
+    "cra_snapshot": {
+      "type": "object",
+      "description": "Snapshot of the ClinicRoleAssignment at deletion time \u2014 used to restore the CRA status"
+    }
+  },
+  "required": [
+    "user_id",
+    "status",
+    "deleted_at"
+  ],
+  "rls": {
+    "create": {
+      "id": "__service_role_only__"
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "id": "__service_role_only__"
+    },
+    "delete": {
+      "id": "__service_role_only__"
+    }
+  }
+}

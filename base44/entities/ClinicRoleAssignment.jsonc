@@ -1,0 +1,64 @@
+{
+  "name": "ClinicRoleAssignment",
+  "type": "object",
+  "description": "AUTHORITATIVE, IMMUTABLE (except by Super Admin) application role assignment for a user within a specific clinic. ONE record per (user_id, clinic_id) pair. Written EXCLUSIVELY by the assignUserToClinic backend function (super_admin only) via the service role. All other code paths \u2014 authentication, clinic loading, reconciliation, seeding, frontend state, me(), JWT \u2014 READ this record to determine the user's AuraDental application role; they NEVER write, default, or fall back to another role. This is the single source of truth for clinic-level roles (clinic_admin, doctor, receptionist) and the user's account status (active, pending, not_subscribed). Platform-level roles (super_admin) remain on UserSecurityProfile since they are not per-clinic.",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "The user this role assignment applies to"
+    },
+    "clinic_id": {
+      "type": "string",
+      "description": "The clinic this role is scoped to \u2014 together with user_id this forms a unique pair"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "clinic_admin",
+        "doctor",
+        "receptionist"
+      ],
+      "description": "The AuraDental application role \u2014 authoritative and immutable except by Super Admin action via assignUserToClinic"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "pending",
+        "not_subscribed"
+      ],
+      "default": "active",
+      "description": "Account status \u2014 'active' (normal access), 'pending' (account temporarily suspended, user is logged out and shown a persistent suspended screen), 'not_subscribed' (trial ended, user is logged out and shown a persistent trial-ended screen). Enforced server-side via getCurrentUserRole. Does NOT affect RBAC or clinic logic \u2014 the role remains intact, only access is blocked."
+    },
+    "assigned_by_id": {
+      "type": "string",
+      "description": "The super admin who assigned or last changed this role. 'system' for migrated baseline records."
+    },
+    "assigned_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the role was last assigned or changed by a super admin"
+    }
+  },
+  "required": [
+    "user_id",
+    "clinic_id",
+    "role"
+  ],
+  "rls": {
+    "create": {
+      "id": "__service_role_only__"
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "id": "__service_role_only__"
+    },
+    "delete": {
+      "id": "__service_role_only__"
+    }
+  }
+}

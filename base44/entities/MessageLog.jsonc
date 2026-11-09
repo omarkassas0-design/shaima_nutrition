@@ -1,0 +1,127 @@
+{
+  "name": "MessageLog",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "sms",
+        "whatsapp",
+        "email"
+      ],
+      "description": "Message channel"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "appointment_reminder",
+        "appointment_confirmation",
+        "invoice",
+        "treatment_plan",
+        "custom",
+        "verification_otp"
+      ],
+      "default": "custom",
+      "description": "Type of message"
+    },
+    "recipient": {
+      "type": "string",
+      "description": "Recipient phone number or email address"
+    },
+    "recipient_name": {
+      "type": "string",
+      "description": "Recipient display name"
+    },
+    "patient_id": {
+      "type": "string",
+      "description": "Related patient ID"
+    },
+    "appointment_id": {
+      "type": "string",
+      "description": "Related appointment ID"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Email subject (email channel only)"
+    },
+    "body": {
+      "type": "string",
+      "description": "Message content"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "sent",
+        "failed",
+        "delivered",
+        "undelivered"
+      ],
+      "default": "pending",
+      "description": "Delivery status"
+    },
+    "provider": {
+      "type": "string",
+      "enum": [
+        "twilio",
+        "resend",
+        "meta_whatsapp"
+      ],
+      "description": "Service provider used"
+    },
+    "provider_message_id": {
+      "type": "string",
+      "description": "Provider message ID (Twilio SID, Resend ID, etc.)"
+    },
+    "error_code": {
+      "type": "string",
+      "description": "Provider error code if failed"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error message if failed"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When message was sent"
+    },
+    "template_variables": {
+      "type": "object",
+      "description": "Variables used in template rendering"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "channel",
+    "recipient",
+    "body",
+    "status"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

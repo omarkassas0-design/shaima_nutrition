@@ -1,0 +1,189 @@
+{
+  "name": "Backup",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "backup_type": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "automatic",
+        "google_drive"
+      ],
+      "default": "manual",
+      "description": "Backup type"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "Backup file URL (private storage URI)"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Backup file name"
+    },
+    "file_size": {
+      "type": "number",
+      "description": "File size in bytes"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "completed",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "Backup status \u2014 failed backups are never considered valid for restore. A backup stays 'pending' while patient file batches are still processing; only marked 'completed' when ALL files are processed."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Backup notes"
+    },
+    "record_count": {
+      "type": "object",
+      "description": "Per-entity record counts captured in this backup"
+    },
+    "external_file_id": {
+      "type": "string",
+      "description": "Google Drive file ID for the off-platform backup copy"
+    },
+    "external_backup_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "uploaded",
+        "failed",
+        "skipped"
+      ],
+      "default": "pending",
+      "description": "Off-platform backup upload status \u2014 a backup is only 'completed' if external copy succeeded"
+    },
+    "external_patient_file_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of patient file contents successfully copied to external storage"
+    },
+    "is_safety_backup": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if this is a pre-restore safety backup \u2014 never auto-deleted, kept for manual recovery"
+    },
+    "patient_file_total": {
+      "type": "number",
+      "default": 0,
+      "description": "Total number of patient files with content to back up"
+    },
+    "patient_file_successful": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of patient file contents successfully uploaded to Google Drive"
+    },
+    "patient_file_failed": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of patient file contents that permanently failed after retries"
+    },
+    "patient_file_skipped": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of patient files skipped for valid reasons (empty, too large, no reference)"
+    },
+    "patient_file_batch_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "completed",
+        "failed",
+        "not_applicable"
+      ],
+      "default": "pending",
+      "description": "Patient file batch processing status \u2014 tracks progress across multiple batch invocations"
+    },
+    "patient_file_mappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "patient_file_id": {
+            "type": "string"
+          },
+          "drive_file_id": {
+            "type": "string"
+          }
+        },
+        "description": "Minimal mapping \u2014 file_name and file_type are enriched during finalization"
+      },
+      "default": [],
+      "description": "Accumulated patient file mappings (patient_file_id to drive_file_id) \u2014 used to avoid duplicates on resume and merged into the backup JSON at finalization"
+    },
+    "patient_file_failed_details": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "patient_file_id": {
+            "type": "string"
+          },
+          "file_name": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "default": [],
+      "description": "Details of patient files that permanently failed after retries"
+    },
+    "patient_file_skipped_details": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "patient_file_id": {
+            "type": "string"
+          },
+          "file_name": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "default": [],
+      "description": "Details of patient files skipped for valid reasons (empty, too large, no reference)"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "file_url",
+    "file_name"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "name": "Permanent Deletion Countdown",
+  "description": "Waits 60 seconds after a permanent clinic deletion is scheduled, then executes the hard deletion server-side. The execute function verifies the deletion is still pending (not cancelled) AND the clinic is still soft-deleted before permanently destroying all clinic data.",
+  "trigger": {
+    "config": {
+      "trigger_type": "entity",
+      "entity_name": "PendingPermanentDeletion",
+      "events": [
+        "create"
+      ]
+    },
+    "condition": "${ .trigger.data.status == \"pending\" }"
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "permanent_deletion_countdown",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "wait_countdown": {
+          "wait": "PT60S",
+          "then": "execute_deletion",
+          "x-base44": {
+            "title": "60-second countdown",
+            "description": "Mandatory wait before permanent deletion"
+          }
+        }
+      },
+      {
+        "execute_deletion": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "executePermanentDeletion",
+            "args": {
+              "pending_deletion_id": "${ .trigger.entity_id }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Execute permanent deletion",
+            "description": "Permanently destroys all clinic data if still pending and clinic is soft-deleted"
+          }
+        }
+      }
+    ]
+  }
+}

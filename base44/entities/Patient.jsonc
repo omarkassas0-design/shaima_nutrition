@@ -1,0 +1,155 @@
+{
+  "name": "Patient",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "full_name": {
+      "type": "string",
+      "description": "Patient full name"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Patient phone number"
+    },
+    "whatsapp_number": {
+      "type": "string",
+      "description": "Patient WhatsApp number"
+    },
+    "whatsapp_opt_in": {
+      "type": "boolean",
+      "default": false,
+      "description": "Patient opted in to WhatsApp reminders"
+    },
+    "patient_source": {
+      "type": "string",
+      "enum": [
+        "doctor",
+        "clinic"
+      ],
+      "description": "Who brought the patient \u2014 determines which commission rate applies"
+    },
+    "referring_doctor_id": {
+      "type": "string",
+      "description": "Doctor who referred the patient (required when patient_source = doctor)"
+    },
+    "referring_doctor_name": {
+      "type": "string",
+      "description": "Cached referring doctor name for display"
+    },
+    "assigned_doctor_id": {
+      "type": "string",
+      "description": "Doctor assigned to treat this patient (used when patient_source = clinic). The patient belongs to the clinic; this doctor is responsible for treatment."
+    },
+    "assigned_doctor_name": {
+      "type": "string",
+      "description": "Cached assigned doctor name for display"
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "male",
+        "female"
+      ],
+      "description": "Patient gender"
+    },
+    "birth_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of birth"
+    },
+    "address": {
+      "type": "string",
+      "description": "Patient address"
+    },
+    "notes": {
+      "type": "string",
+      "description": "General notes"
+    },
+    "phone_verified": {
+      "type": "boolean",
+      "default": false
+    },
+    "medical_info": {
+      "type": "object",
+      "description": "Medical information object"
+    },
+    "dental_history": {
+      "type": "object",
+      "description": "Dental history object"
+    },
+    "recall_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Next scheduled recall/follow-up date for the patient"
+    },
+    "recall_interval_months": {
+      "type": "number",
+      "description": "Recall interval in months \u2014 used to auto-calculate the next recall date"
+    },
+    "recall_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "contacted",
+        "scheduled",
+        "not_interested"
+      ],
+      "default": "pending",
+      "description": "Status of the latest recall contact attempt"
+    },
+    "recall_notes": {
+      "type": "string",
+      "description": "Notes about recall contact attempts"
+    },
+    "last_recall_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the patient was last contacted for recall"
+    },
+    "plan_discount_type": {
+      "type": "string",
+      "enum": [
+        "none",
+        "percentage",
+        "fixed"
+      ],
+      "default": "none",
+      "description": "Treatment Plan level discount type \u2014 persisted plan-level discount that is distributed across all PatientTreatment records when applied"
+    },
+    "plan_discount_value": {
+      "type": "number",
+      "default": 0,
+      "description": "Treatment Plan level discount value (percentage 0-100, or fixed amount in clinic currency)"
+    }
+  },
+  "required": [
+    "full_name",
+    "phone",
+    "clinic_id"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

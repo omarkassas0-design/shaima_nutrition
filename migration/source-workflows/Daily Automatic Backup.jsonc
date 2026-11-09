@@ -1,0 +1,45 @@
+{
+  "name": "Daily Automatic Backup",
+  "description": "Backs up active clinics every 30 minutes between 1-5 AM. Each run processes clinics that haven't been backed up today, with a 4-minute time budget per run to prevent timeouts. Remaining clinics are picked up by the next scheduled run.",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "daily_automatic_backup",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_backups": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "runAutomaticBackups",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Run daily backups",
+            "description": "Backup all clinics"
+          }
+        }
+      }
+    ]
+  },
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "*/30 1-5 * * *",
+      "one_time_date": null,
+      "timezone": "Europe/Istanbul",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  }
+}

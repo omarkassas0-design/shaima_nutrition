@@ -1,0 +1,67 @@
+{
+  "name": "VerificationOTP",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "phone_number": {
+      "type": "string",
+      "description": "Phone number being verified"
+    },
+    "otp_code": {
+      "type": "string",
+      "description": "6-digit verification code"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the code expires"
+    },
+    "attempts": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of failed attempts"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "verified",
+        "expired",
+        "blocked"
+      ],
+      "default": "pending",
+      "description": "OTP status"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "phone_number",
+    "otp_code",
+    "expires_at"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

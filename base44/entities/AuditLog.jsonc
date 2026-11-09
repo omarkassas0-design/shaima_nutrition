@@ -1,0 +1,76 @@
+{
+  "name": "AuditLog",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (set server-side from the authoritative security profile)"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "create",
+        "update",
+        "delete",
+        "restore"
+      ],
+      "description": "Action performed on the record"
+    },
+    "entity_name": {
+      "type": "string",
+      "description": "Entity affected by the action"
+    },
+    "record_id": {
+      "type": "string",
+      "description": "ID of the affected record (original ID for deletes)"
+    },
+    "record_snapshot": {
+      "type": "object",
+      "description": "Full record snapshot captured at delete time \u2014 used by the Recycle Bin to restore the record"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Human-readable action summary"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "ID of the user who performed the action"
+    },
+    "user_name": {
+      "type": "string",
+      "description": "Display name of the user who performed the action"
+    },
+    "restored": {
+      "type": "boolean",
+      "default": false,
+      "description": "True once a delete entry has been restored via the Recycle Bin"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "action",
+    "entity_name"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

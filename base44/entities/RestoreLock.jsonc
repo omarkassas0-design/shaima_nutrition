@@ -1,0 +1,71 @@
+{
+  "name": "RestoreLock",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Clinic ID being restored \u2014 only one restore per clinic at a time"
+    },
+    "locked_by_user_id": {
+      "type": "string",
+      "description": "User ID who initiated the restore"
+    },
+    "locked_by_name": {
+      "type": "string",
+      "description": "Cached user name for display"
+    },
+    "locked_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the lock was acquired"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Lock TTL \u2014 auto-expire stale locks (locked_at + 30 minutes)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "released",
+        "expired"
+      ],
+      "default": "active",
+      "description": "Lock status"
+    },
+    "backup_id": {
+      "type": "string",
+      "description": "Backup being restored"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "locked_by_user_id",
+    "locked_at",
+    "expires_at",
+    "status"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

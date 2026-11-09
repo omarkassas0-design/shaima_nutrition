@@ -1,0 +1,85 @@
+{
+  "name": "Treatment",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Treatment name"
+    },
+    "category": {
+      "type": "string",
+      "description": "Treatment category"
+    },
+    "description": {
+      "type": "string",
+      "description": "Treatment description"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "applicable_surfaces": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Surfaces applicable to this treatment (standard names like mesial/distal/occlusal/buccal/lingual/palatal, or custom names). Offered for selection when adding this treatment to a Treatment Plan."
+    },
+    "default_price": {
+      "type": "number",
+      "description": "Default price"
+    },
+    "currency": {
+      "type": "string",
+      "enum": [
+        "USD",
+        "SYP",
+        "TRY",
+        "EUR"
+      ],
+      "default": "USD"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "description": "Duration in minutes"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "name",
+    "clinic_id"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

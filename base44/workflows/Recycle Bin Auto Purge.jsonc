@@ -1,0 +1,45 @@
+{
+  "name": "Recycle Bin Auto Purge",
+  "description": "Permanently removes ordinary recycle-bin entries 7 days after their original deletion. The Super Admin Clinic and User Recycle Bins are excluded and keep their manual-only deletion.",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "recycle_bin_auto_purge",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "purge_recycle_bin": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "purgeRecycleBin",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Purge expired recycle-bin items",
+            "description": "Permanently delete items deleted more than 7 days ago"
+          }
+        }
+      }
+    ]
+  },
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 3 * * *",
+      "one_time_date": null,
+      "timezone": "Europe/Istanbul",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  }
+}

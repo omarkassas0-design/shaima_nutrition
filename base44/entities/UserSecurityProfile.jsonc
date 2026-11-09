@@ -1,0 +1,56 @@
+{
+  "name": "UserSecurityProfile",
+  "type": "object",
+  "description": "Authoritative, server-only record of each user's security-sensitive fields. Written EXCLUSIVELY by backend functions via the service role. All client write paths are denied by RLS, so a user cannot alter their own clinic identity, role or approval state here. The User record is continuously reconciled against this record.",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "The User record id this profile governs"
+    },
+    "clinic_id": {
+      "type": "string",
+      "description": "Authoritative clinic assignment"
+    },
+    "role": {
+      "type": "string",
+      "description": "Authoritative application role"
+    },
+    "signup_status": {
+      "type": "string",
+      "description": "Authoritative registration/approval state"
+    },
+    "assigned_by_id": {
+      "type": "string",
+      "description": "Id of the admin who last changed this profile, or 'system' for automatic baselines"
+    },
+    "last_revert_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When an unauthorized change to the User record was last detected and reverted"
+    },
+    "revert_count": {
+      "type": "number",
+      "default": 0,
+      "description": "How many unauthorized changes have been reverted for this user"
+    }
+  },
+  "required": [
+    "user_id"
+  ],
+  "rls": {
+    "create": {
+      "id": "__service_role_only__"
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "id": "__service_role_only__"
+    },
+    "delete": {
+      "id": "__service_role_only__"
+    }
+  }
+}

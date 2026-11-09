@@ -1,0 +1,198 @@
+{
+  "name": "Clinic",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Clinic name"
+    },
+    "name_ar": {
+      "type": "string",
+      "description": "Clinic name in Arabic"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "Clinic logo URL"
+    },
+    "address": {
+      "type": "string",
+      "description": "Clinic address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Clinic phone number"
+    },
+    "email": {
+      "type": "string",
+      "description": "Clinic email address"
+    },
+    "country": {
+      "type": "string",
+      "description": "Clinic country"
+    },
+    "city": {
+      "type": "string",
+      "description": "Clinic city"
+    },
+    "currency": {
+      "type": "string",
+      "enum": [
+        "USD",
+        "SYP",
+        "TRY",
+        "EUR"
+      ],
+      "default": "USD",
+      "description": "Default currency"
+    },
+    "language": {
+      "type": "string",
+      "enum": [
+        "en",
+        "ar",
+        "tr"
+      ],
+      "default": "en",
+      "description": "Default language"
+    },
+    "setup_completed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the clinic admin has completed the mandatory one-time clinic setup flow. Set to true by the completeClinicSetup backend function after all required fields are validated. Once true, the setup form is never shown again \u2014 survives refresh, logout/login, and device changes."
+    },
+    "reminder_before": {
+      "type": "number",
+      "description": "Reminder minutes before appointment"
+    },
+    "settings": {
+      "type": "object",
+      "description": "Additional clinic settings"
+    },
+    "whatsapp_number": {
+      "type": "string",
+      "description": "Clinic WhatsApp number (manual use only \u2014 no automatic sending)"
+    },
+    "whatsapp_display_name": {
+      "type": "string",
+      "description": "WhatsApp display name"
+    },
+    "phone_verified": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether WhatsApp number has been verified"
+    },
+    "whatsapp_reminders_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enable WhatsApp reminders globally"
+    },
+    "reminder_1h_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Send 1 hour reminders"
+    },
+    "reminder_3h_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Send 3 hour reminders"
+    },
+    "reminder_24h_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Send 24 hour reminders"
+    },
+    "reminder_custom_minutes": {
+      "type": "number",
+      "description": "Custom reminder minutes before appointment"
+    },
+    "reminder_custom_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enable custom time reminder"
+    },
+    "reminder_template": {
+      "type": "string",
+      "description": "WhatsApp message template with variables (manual use only)",
+      "default": "Hello {patient_name},\n\nThis is a reminder from {clinic_name}.\n\nYou have an appointment with Dr. {doctor_name} on {appointment_date} at {appointment_time}.\n\nPlease contact us if you need to reschedule.\n\n{clinic_phone}"
+    },
+    "sms_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enable SMS messaging"
+    },
+    "email_enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enable email messaging"
+    },
+    "email_from_name": {
+      "type": "string",
+      "description": "Display name for outgoing emails"
+    },
+    "email_from_address": {
+      "type": "string",
+      "description": "From email address (must be verified with Resend)"
+    },
+    "messaging_provider": {
+      "type": "string",
+      "enum": [
+        "twilio",
+        "meta"
+      ],
+      "default": "twilio",
+      "description": "WhatsApp/SMS provider"
+    },
+    "is_deleted": {
+      "type": "boolean",
+      "default": false,
+      "description": "Soft-delete flag \u2014 true when the clinic has been soft-deleted. All clinic data is preserved; the clinic is just inaccessible to normal operations."
+    },
+    "deleted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the clinic was soft-deleted (null when active)"
+    },
+    "deleted_by": {
+      "type": "string",
+      "description": "User ID of the super admin who soft-deleted the clinic"
+    },
+    "deleted_by_name": {
+      "type": "string",
+      "description": "Display name of the super admin who soft-deleted the clinic"
+    },
+    "deletion_status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "soft_deleted"
+      ],
+      "default": "active",
+      "description": "Clinic deletion status \u2014 'active' (normal operation) or 'soft_deleted' (inaccessible but all data preserved for restore)"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

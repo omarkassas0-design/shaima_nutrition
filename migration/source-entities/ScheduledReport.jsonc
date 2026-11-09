@@ -1,0 +1,89 @@
+{
+  "name": "ScheduledReport",
+  "type": "object",
+  "description": "Configures an automated scheduled report for a clinic. Reports are generated server-side and delivered by email to authorized recipients. Respects clinic isolation, user permissions, and currency separation.",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "report_type": {
+      "type": "string",
+      "enum": [
+        "daily_summary",
+        "weekly_summary",
+        "monthly_summary",
+        "revenue_summary",
+        "expense_summary",
+        "payment_summary",
+        "outstanding_balances",
+        "appointment_statistics",
+        "clinic_performance"
+      ],
+      "description": "Type of report to generate"
+    },
+    "frequency": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly"
+      ],
+      "description": "How often to send the report"
+    },
+    "email_recipients": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Email addresses to receive the report"
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this scheduled report is active"
+    },
+    "last_sent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the report was last sent"
+    },
+    "next_send_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the report is next scheduled"
+    },
+    "created_by_id": {
+      "type": "string",
+      "description": "User who created this configuration"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "report_type",
+    "frequency",
+    "email_recipients"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "name": "PendingPermanentDeletion",
+  "type": "object",
+  "description": "Tracks pending PERMANENT clinic deletion requests with a mandatory 60-second countdown. Created exclusively by schedulePermanentDeletion (super_admin only) via the service role. A workflow waits 60 seconds then calls executePermanentDeletion, which verifies the record is still 'pending' (not cancelled) AND the clinic is still soft-deleted before physically destroying ALL clinic data. The Super Admin can cancel at any time during the 60 seconds via cancelPermanentDeletion. This is the ONLY path that physically deletes clinic data \u2014 normal 'Delete Clinic' is a soft-delete. This record persists after execution/cancellation/failure for audit trail purposes.",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "The clinic scheduled for permanent deletion"
+    },
+    "clinic_name": {
+      "type": "string",
+      "description": "Cached clinic name for display and audit"
+    },
+    "requested_by_id": {
+      "type": "string",
+      "description": "Super admin who requested the permanent deletion"
+    },
+    "requested_by_name": {
+      "type": "string",
+      "description": "Super admin display name for audit"
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the permanent deletion was requested"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the 60-second countdown expires and the clinic will be permanently deleted"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "cancelled",
+        "executed",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "Current state \u2014 'pending' (countdown), 'cancelled' (aborted), 'executed' (hard-deleted), 'failed' (error during deletion)"
+    },
+    "executed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the clinic was permanently deleted"
+    },
+    "cancelled_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the permanent deletion was cancelled"
+    },
+    "failed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the permanent deletion failed"
+    },
+    "failure_reason": {
+      "type": "string",
+      "description": "Error details if the deletion failed \u2014 used for safe recovery/retry"
+    },
+    "deletion_results": {
+      "type": "object",
+      "description": "Per-entity deletion results captured during execution \u2014 what was deleted, what failed"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "requested_by_id",
+    "expires_at",
+    "status"
+  ],
+  "rls": {
+    "create": {
+      "id": "__service_role_only__"
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "id": "__service_role_only__"
+    },
+    "delete": {
+      "id": "__service_role_only__"
+    }
+  }
+}

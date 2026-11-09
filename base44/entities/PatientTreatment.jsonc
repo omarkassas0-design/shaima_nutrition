@@ -1,0 +1,131 @@
+{
+  "name": "PatientTreatment",
+  "type": "object",
+  "properties": {
+    "clinic_id": {
+      "type": "string",
+      "description": "Associated clinic ID (auto-assigned server-side from the authenticated user)"
+    },
+    "patient_id": {
+      "type": "string",
+      "description": "Patient ID"
+    },
+    "treatment_id": {
+      "type": "string",
+      "description": "Treatment template ID"
+    },
+    "treatment_name": {
+      "type": "string",
+      "description": "Treatment name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Treatment description"
+    },
+    "price": {
+      "type": "number",
+      "description": "Price for this treatment"
+    },
+    "currency": {
+      "type": "string",
+      "enum": [
+        "USD",
+        "SYP",
+        "TRY",
+        "EUR"
+      ],
+      "default": "USD"
+    },
+    "paid_amount": {
+      "type": "number",
+      "default": 0,
+      "description": "Amount paid so far \u2014 only payments in the SAME currency reduce this"
+    },
+    "discount_type": {
+      "type": "string",
+      "enum": [
+        "percentage",
+        "fixed",
+        "none"
+      ],
+      "default": "none"
+    },
+    "discount_value": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "in_progress",
+        "completed",
+        "cancelled"
+      ],
+      "default": "planned"
+    },
+    "tooth_numbers": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "Affected tooth numbers"
+    },
+    "tooth_surfaces": {
+      "type": "object",
+      "description": "Map of tooth_number (string key) to array of surface names (mesial, distal, occlusal, buccal, lingual, palatal). Empty/omitted when surfaces are not applicable.",
+      "default": {}
+    },
+    "doctor_id": {
+      "type": "string",
+      "description": "Assigned doctor ID"
+    },
+    "doctor_name": {
+      "type": "string",
+      "description": "Assigned doctor name"
+    },
+    "doctor_commission_percentage": {
+      "type": "number",
+      "default": 0,
+      "description": "Doctor commission percentage at time of treatment"
+    },
+    "doctor_commission_amount": {
+      "type": "number",
+      "default": 0,
+      "description": "Calculated commission amount"
+    },
+    "treatment_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Treatment date"
+    }
+  },
+  "required": [
+    "clinic_id",
+    "patient_id",
+    "treatment_name",
+    "price"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
